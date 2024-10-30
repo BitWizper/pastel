@@ -1,0 +1,45 @@
+const express = require('express');
+const cors = require('cors');
+require('dotenv').config();
+const sequelize = require('./config/database');
+
+
+
+// Importar rutas
+const usuarioRoutes = require('./routes/usuarioRoutes');
+const pastelRoutes = require('./routes/pastelRoutes');
+const categoriaRoutes = require('./routes/categoriaRoutes');
+const reposteroRoutes = require ('./routes/reposteroRoutes');
+const citaRoutes=require ('./routes/citaRoutes');
+const pastelPersonalizadoRoutes = require ('./routes/pastelPersonalizadoRoutes');
+const resenaRoutes = require ('./routes/resenaRoutes');
+const pedidoRoutes = require ('./routes/pedidoRoutes');
+
+const app = express();
+const port = process.env.PORT || 3000;
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+// Rutas
+app.use('/api/usuario', usuarioRoutes);
+app.use('/api/pastel', pastelRoutes);
+app.use('/api/categoria', categoriaRoutes);
+app.use('/api/repostero', reposteroRoutes);
+app.use('/api/cita', citaRoutes);
+app.use ('/api/PastelPersonalizado', pastelPersonalizadoRoutes);
+app.use ('/api/resena', resenaRoutes);
+app.use ('/api/pedido', pedidoRoutes);
+
+
+
+// Sincronizar la base de datos
+sequelize.sync().then(() => {
+  console.log('Base de datos sincronizada');
+  app.listen(port, () => {
+    console.log(`Servidor corriendo en el puerto ${port}`);
+  });
+}).catch(error => {
+  console.error('Error al sincronizar la base de datos:', error);
+});
